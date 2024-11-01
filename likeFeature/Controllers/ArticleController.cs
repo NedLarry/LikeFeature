@@ -1,4 +1,5 @@
-﻿using likeFeature.Services;
+﻿using likeFeature.Domain.request;
+using likeFeature.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +16,22 @@ namespace likeFeature.Controllers
             _articleService = articleService;
         }
 
-        [HttpGet("LikeCount/{articleId}")]
+        [HttpGet("getArticles")]
+        public async Task<IActionResult> GetArticleLikeCount()
+        {
+            return Ok(await _articleService.GetAllArticles());
+        }
+
+        [HttpGet("GetLikeCount/{articleId}")]
         public async Task<IActionResult> GetArticleLikeCount(int articleId)
         {
             return Ok(await _articleService.GetArticleLikeCount(articleId));
         }
 
-        [HttpGet("LikeArticle/{articleId}")]
-        public async Task<IActionResult> LikeArticle(int articleId)
+        [HttpPost("LikeArticle")]
+        public async Task<IActionResult> LikeArticle(LikeArticleRequest request)
         {
-            return Ok(await _articleService.LikeArticle(articleId));
+            return Ok(await _articleService.LikeArticle(request));
         }
     }
 }

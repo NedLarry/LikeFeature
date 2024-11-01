@@ -1,4 +1,5 @@
 ﻿using likeFeature.Domain;
+using likeFeature.Domain.request;
 using Microsoft.EntityFrameworkCore;
 
 namespace likeFeature.Services
@@ -33,7 +34,7 @@ namespace likeFeature.Services
                 return new
                 {
                     success = true,
-                    data = article.LikeCount
+                    ArticleLikeCount = article.LikeCount
                 };
 
             }catch (Exception ex)
@@ -46,12 +47,12 @@ namespace likeFeature.Services
             }
         }
 
-        public async Task<object> LikeArticle(int articleId)
+        public async Task<object> LikeArticle(LikeArticleRequest request)
         {
             try
             {
 
-                var article = await _context.Articles.Where(a => a.Id.Equals(articleId)).FirstOrDefaultAsync();
+                var article = await _context.Articles.Where(a => a.Id.Equals(request.ArticleId)).FirstOrDefaultAsync();
 
                 if (article is null)
                 {
@@ -73,7 +74,31 @@ namespace likeFeature.Services
                 return new
                 {
                     success = true,
-                    data = article.LikeCount
+                    ArticleLikeCount = article.LikeCount
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public async Task<object> GetAllArticles()
+        {
+            try
+            {
+
+                var article = await _context.Articles.ToListAsync();
+
+                return new
+                {
+                    success = true,
+                    data = article
                 };
 
             }
